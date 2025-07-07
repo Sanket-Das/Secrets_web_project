@@ -39,24 +39,6 @@ A secure full-stack web application built with Node.js, Express, MongoDB, and EJ
 
 ---
 
-FOLDER STRUCTURE:-
 
-.
-├── views/
-│   ├── home.ejs
-│   ├── login.ejs
-│   ├── register.ejs
-│   ├── secrets.ejs
-│   ├── submit.ejs
-│   └── partials/
-│       ├── header.ejs
-│       └── footer.ejs
-├── public/
-│   └── css/
-│       └── styles.css
-├── index.js
-├── .gitignore
-├── package.json
-└── README.md
 
 
