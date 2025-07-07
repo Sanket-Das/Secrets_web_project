@@ -1,0 +1,41 @@
+<%- include("partials/header") %>
+
+<div class="form-container">
+  <h2>Register</h2>
+  <form action="/register" method="post" onsubmit="return validatePassword()">
+    <input type="text" name="name" placeholder="Full Name" required>
+    <input type="email" name="username" placeholder="Email" required>
+
+    <input type="password" name="password" id="password" placeholder="Password" required
+           pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}"
+           title="Password must have 1 uppercase, 1 lowercase, 1 number, and be at least 6 characters long.">
+
+    <label>
+      <input type="checkbox" onclick="togglePassword()"> Show Password
+    </label>
+
+    <p id="error" style="color:red;"></p>
+
+    <button class="btn-form" type="submit">Register</button>
+  </form>
+</div>
+
+<script>
+  function togglePassword() {
+    const passwordInput = document.getElementById("password");
+    passwordInput.type = passwordInput.type === "password" ? "text" : "password";
+  }
+
+  function validatePassword() {
+    const password = document.getElementById("password").value;
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;
+    if (!regex.test(password)) {
+      document.getElementById("error").innerText =
+        "❌ Password must have 1 uppercase, 1 lowercase, 1 number, and be at least 6 characters.";
+      return false;
+    }
+    return true;
+  }
+</script>
+
+<%- include("partials/footer") %>
