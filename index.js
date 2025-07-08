@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const ejs = require("ejs");
@@ -8,15 +9,15 @@ const cookieParser = require("cookie-parser");
 
 const app = express();
 const saltRounds = 10;
-const secretKey = "SuperSecretJWTKey123"; // use env in production
+const secretKey = "SuperSecretJWTKey123"; // move to env for production
 
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
-app.use(cookieParser()); // 🍪 enable cookie parser
+app.use(cookieParser());
 
 // MongoDB Connection
-mongoose.connect("mongodb+srv://sanket_cse:ZombyYT123@secrets.c25tlmk.mongodb.net/userDB")
+mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB connected"))
   .catch(err => console.error("MongoDB connection error:", err));
 
@@ -29,7 +30,7 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model("User", userSchema);
 
-// Auth middleware
+// JWT Auth Middleware
 function isAuthenticated(req, res, next) {
   const token = req.cookies.token;
   if (!token) return res.redirect("/login");
@@ -100,10 +101,9 @@ app.post("/login", async (req, res) => {
       { expiresIn: "1h" }
     );
 
-    // Set token in secure HttpOnly cookie
     res.cookie("token", token, {
       httpOnly: true,
-      // secure: true, // only in production
+      // secure: true, // uncomment on HTTPS
       maxAge: 60 * 60 * 1000
     });
 
@@ -114,5 +114,8 @@ app.post("/login", async (req, res) => {
   }
 });
 
-// Server Start
-app.listen(3000, () => console.log("Server started on port 3000"));
+// Start Server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`✅ Server started on port ${PORT}`);
+});
