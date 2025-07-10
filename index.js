@@ -11,7 +11,7 @@ const app = express();
 const saltRounds = 10;
 const secretKey = "SuperSecretJWTKey123"; // move to env for production
 
-app.set("view engine", "ejs");
+app.set("view engine", "ejs");  // Middlewares
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.use(cookieParser());
@@ -47,7 +47,7 @@ function isAuthenticated(req, res, next) {
 // Routes
 app.get("/", (req, res) => res.render("home"));
 app.get("/register", (req, res) => res.render("register"));
-app.get("/login", (req, res) => res.render("login"));
+app.get("/login", (req, res) => res.render("login", { error: null }));
 app.get("/logout", (req, res) => {
   res.clearCookie("token");
   res.redirect("/login");
@@ -77,7 +77,7 @@ app.post("/register", async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, saltRounds);
     const newUser = new User({ name, email: username, password: hashedPassword });
     await newUser.save();
-    res.render("login");
+    res.render("login", { error: null });
   } catch (err) {
     console.error(err);
     res.send("Registration failed.");
@@ -90,10 +90,14 @@ app.post("/login", async (req, res) => {
 
   try {
     const foundUser = await User.findOne({ email: username });
-    if (!foundUser) return res.send("User not found.");
+    if (!foundUser) {
+      return res.render("login", { error: "❌ User not found." });
+    }
 
     const match = await bcrypt.compare(password, foundUser.password);
-    if (!match) return res.send("Incorrect password.");
+    if (!match) {
+      return res.render("login", { error: "❌ Incorrect password." });
+    }
 
     const token = jwt.sign(
       { id: foundUser._id, name: foundUser.name },
@@ -110,7 +114,7 @@ app.post("/login", async (req, res) => {
     res.redirect("/secrets");
   } catch (err) {
     console.error(err);
-    res.send("Login failed.");
+    res.render("login", { error: "❌ Login failed. Try again." });
   }
 });
 

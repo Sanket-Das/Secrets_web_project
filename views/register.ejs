@@ -6,9 +6,15 @@
     <input type="text" name="name" placeholder="Full Name" required>
     <input type="email" name="username" placeholder="Email" required>
 
-    <input type="password" name="password" id="password" placeholder="Password" required
-           pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}"
-           title="Password must have 1 uppercase, 1 lowercase, 1 number, and be at least 6 characters long.">
+    <input type="password" name="password" id="password" placeholder="Password" required>
+<small id="passwordHint" class="hint-text" style="color:#666;">
+  Password must have 1 uppercase, 1 lowercase, 1 number, and be at least 6 characters long.
+</small>
+<small id="passwordError" class="hint-text" style="color:red; display:none;">
+  ❌ Your password does not meet the requirements.
+</small>
+
+
 
     <label>
       <input type="checkbox" onclick="togglePassword()"> Show Password
@@ -27,15 +33,21 @@
   }
 
   function validatePassword() {
-    const password = document.getElementById("password").value;
-    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;
-    if (!regex.test(password)) {
-      document.getElementById("error").innerText =
-        "❌ Password must have 1 uppercase, 1 lowercase, 1 number, and be at least 6 characters.";
-      return false;
+    const passwordInput = document.getElementById("password");
+    const errorText = document.getElementById("passwordError");
+    const password = passwordInput.value;
+
+    const isValid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/.test(password);
+
+    if (!isValid) {
+      errorText.style.display = "block";
+      return false; // prevent form from submitting
+    } else {
+      errorText.style.display = "none";
+      return true;
     }
-    return true;
   }
 </script>
+
 
 <%- include("partials/footer") %>

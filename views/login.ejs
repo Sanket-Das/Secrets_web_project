@@ -1,12 +1,95 @@
 <%- include("partials/header") %>
 
+<!-- Font Awesome for alert icon (if not already included in header) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
 <div class="form-container">
   <h2>Login</h2>
+
+  <% if (typeof error !== 'undefined' && error) { %>
+    <div class="login-popup">
+      <i class="fa fa-exclamation-circle"></i>
+      <span><%= error %></span>
+    </div>
+  <% } %>
+
   <form action="/login" method="post">
     <input type="email" name="username" placeholder="Email" required>
-    <input type="password" name="password" placeholder="Password" required>
+
+    <input type="password" name="password" id="loginPassword" placeholder="Password" required>
+
+    <label style="font-size: 14px;">
+      <input type="checkbox" onclick="toggleLoginPassword()"> Show Password
+    </label>
+
     <button class="btn-form" type="submit">Login</button>
   </form>
 </div>
+
+<style>
+  .form-container {
+    width: 300px;
+    margin: 60px auto;
+    padding: 25px;
+    background: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    text-align: center;
+  }
+
+  .form-container h2 {
+    margin-bottom: 20px;
+    color: #333;
+  }
+
+  .form-container input[type="email"],
+  .form-container input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  .btn-form {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    border: none;
+    color: white;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .btn-form:hover {
+    background-color: #0056b3;
+  }
+
+  .login-popup {
+    background-color: #ffe6e6;
+    color: #cc0000;
+    border: 1px solid #ff4d4d;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .login-popup i {
+    color: #cc0000;
+  }
+</style>
+
+<script>
+  function toggleLoginPassword() {
+    const input = document.getElementById("loginPassword");
+    input.type = input.type === "password" ? "text" : "password";
+  }
+</script>
 
 <%- include("partials/footer") %>

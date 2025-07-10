@@ -244,3 +244,11 @@ label {
   margin-top: 5px;
   text-align: center;
 }
+
+
+.hint-text {
+  display: block;
+  color: #666;
+  font-size: 12px;
+  margin-top: 5px;
+}
